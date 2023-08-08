@@ -57,24 +57,26 @@ function generatePasswordUsingCriteria() {
       var randomNumber = Math.random() * 100;
 
       if (randomNumber > 50) {
-        var char = password.charAt(i);
-        password =
-          password.substring(0, i) +
-          char.toUpperCase() +
-          password.substring(i + 1);
+        password = changeCharAtIndexToUpperCase(password, i);
       }
     }
 
     //make sure we have at least one uppercase letter
     randomNumber = Math.floor(Math.random() * passwordLength);
-    var char = password.charAt(randomNumber);
-    password =
-      password.substring(0, randomNumber) +
-      char.toUpperCase() +
-      password.substring(randomNumber + 1);
+    password = changeCharAtIndexToUpperCase(password, randomNumber);
   } else if (useUpperCase) {
     password = password.toUpperCase();
   }
 
   return password;
+}
+
+function changeCharAtIndexToUpperCase(stringToModify, index) {
+  var char = stringToModify.charAt(index);
+  stringToModify =
+    stringToModify.substring(0, index) +
+    char.toUpperCase() +
+    stringToModify.substring(index + 1);
+
+  return stringToModify;
 }
