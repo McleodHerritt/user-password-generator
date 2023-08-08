@@ -1,5 +1,5 @@
 //variables to store user criteria
-var minLength = 0;
+var minLength = 8;
 var maxLength = 0;
 var useLowerCase = false;
 var useUpperCase = false;
@@ -34,5 +34,12 @@ function generatePassword() {
 function getCriteria() {}
 
 function generatePasswordUsingCriteria() {
-  return "generated";
+  var password = "";
+
+  //generate a password of letters that is at least the minimum password length
+  for (var i = 0; i < minLength; i++) {
+    password += "a";
+  }
+
+  return password;
 }
