@@ -1,3 +1,11 @@
+//variables to store user criteria
+var minLength = 0;
+var maxLength = 0;
+var useLowerCase = false;
+var useUpperCase = false;
+var useNumbers = false;
+var useSpecialCharacters = false;
+
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
