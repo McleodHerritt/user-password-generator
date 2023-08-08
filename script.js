@@ -38,7 +38,14 @@ function generatePasswordUsingCriteria() {
 
   //generate a password of letters that is at least the minimum password length
   for (var i = 0; i < minLength; i++) {
-    password += "a";
+    // in ascii, a is 97 and z is 122
+    // so, we want to generate a random number between 97 and 122 to represent the lowercase character to be added to the password
+    var minChar = 97;
+    var maxChar = 122;
+
+    var nextChar = minChar + Math.round(Math.random() * (maxChar - minChar));
+
+    password += String.fromCharCode(nextChar);
   }
 
   return password;
