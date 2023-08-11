@@ -27,7 +27,7 @@ function getCharacterSet() {
   const numbers = "0123456789";
   const specialChars = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~";
 
-  let charset = "";
+  var charset = "";
   if (useLowerCase) charset += lowercaseChars;
   if (useUpperCase) charset += uppercaseChars;
   if (useNumbers) charset += numbers;
@@ -46,11 +46,11 @@ function generatePassword() {
   //get the criteria from the user
   getCriteria();
 
-  let password = "";
+  var password = "";
   const charset = getCharacterSet();
 
   // password generation for charset
-  for (let i = 0; i < passwordLength; i++) {
+  for (var i = 0; i < passwordLength; i++) {
     password += getRandomCharFromSet(charset);
   }
 
