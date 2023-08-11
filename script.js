@@ -1,11 +1,12 @@
 //variables to store user criteria
 var minLength = 8;
 var maxLength = 128;
-var passwordLength = 5;
+var passwordLength = 8;
 var useLowerCase = true;
 var useUpperCase = true;
 var useNumbers = true;
-var useSpecialCharacters = false;
+var useSpecialCharacters = true;
+var probabilityOfInsertion = 20;
 
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
@@ -52,12 +53,65 @@ function generatePasswordUsingCriteria() {
   //handle special characters
   password = handleSpecialCharCriteria(password);
 
+  //validate the password to make sure it handles all of the criteria
+  password = validatedPassword(password);
+
   return password;
 }
 
-function handleSpecialCharCriteria(password) {
+// ensures the password that is returned meets all of the users criteria
+function validatedPassword(password) {
+  // validate password length
+  if (password.length != passwordLength) return generatePasswordUsingCriteria();
+
+  // validate lowercase
+  if (useLowerCase) {
+    if (!/[a-z]/.test(password)) return generatePasswordUsingCriteria();
+  }
+
+  // validate uppercase
+  if (useUpperCase) {
+    if (!/[A-Z]/.test(password)) return generatePasswordUsingCriteria();
+  }
+
   return password;
 }
+// this function handles the user criteria for special characters
+function handleSpecialCharCriteria(password) {
+  if (!useSpecialCharacters) return password;
+
+  for (var i = 0; i < passwordLength; i++) {
+    // randomly insert numbers
+    var randomNumber = Math.random() * 100;
+
+    if (randomNumber < probabilityOfInsertion) {
+      password = changeCharAtIndexToSpecialChar(password, i);
+    }
+  }
+
+  //make sure we have at least one uppercase letter
+  randomNumber = Math.floor(Math.random() * passwordLength);
+  password = changeCharAtIndexToSpecialChar(password, randomNumber);
+
+  return password;
+}
+
+// change character at index to special char
+function changeCharAtIndexToSpecialChar(stringToModify, index) {
+  // list of special characters from https://owasp.org/www-community/password-special-characters but with no space
+  var specialChars = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~";
+
+  var randomIndex = Math.floor(Math.random() * specialChars.length);
+  var specialChar = specialChars.charAt(randomIndex);
+
+  stringToModify =
+    stringToModify.substring(0, index) +
+    specialChar +
+    stringToModify.substring(index + 1);
+
+  return stringToModify;
+}
+
 // this function handles the criteria whether the user has chosen to include numbers or not
 function handleNumericCriteria(password) {
   if (!useNumbers) return password;
@@ -66,7 +120,7 @@ function handleNumericCriteria(password) {
     // randomly insert numbers
     var randomNumber = Math.random() * 100;
 
-    if (randomNumber > 50) {
+    if (randomNumber < probabilityOfInsertion) {
       password = changeCharAtIndexToNumber(password, i);
     }
   }
@@ -97,7 +151,7 @@ function handleLowerAndUpperCaseCriteria(password) {
       //randomly change characters to uppercase
       var randomNumber = Math.random() * 100;
 
-      if (randomNumber > 50) {
+      if (randomNumber < probabilityOfInsertion) {
         password = changeCharAtIndexToUpperCase(password, i);
       }
     }
@@ -107,13 +161,19 @@ function handleLowerAndUpperCaseCriteria(password) {
     password = changeCharAtIndexToUpperCase(password, randomNumber);
   } else if (useUpperCase) {
     password = password.toUpperCase();
+  } else if (useLowerCase) {
+    return password;
   }
+
+  // not using lowercase or upper case
   return password;
 }
 
 // generates a password of lower case letters of length passwordLength
 function handlePasswordLengthCriteria(length) {
   var password = "";
+
+  // start with a password of all lowercase letters
   for (var i = 0; i < length; i++) {
     // in ascii, a is 97 and z is 122
     // so, we want to generate a random number between 97 and 122 to represent the lowercase character to be added to the password
@@ -126,6 +186,27 @@ function handlePasswordLengthCriteria(length) {
     // adds the character to the password by converting the number to the corresponding char using the fromCharCode built in function
     password += String.fromCharCode(nextChar);
   }
+
+  if (useLowerCase) return password;
+
+  // if use uppercase then, change it all to uppercase
+  if (useUpperCase) return password.toUpperCase();
+
+  // we are not using lowercase or uppercase, so see if we can start with all special characters
+  if (useSpecialCharacters) {
+    for (var i = 0; i < passwordLength; i++) {
+      password = changeCharAtIndexToSpecialChar(password, i);
+    }
+    return password;
+  }
+
+  if (useNumbers) {
+    for (var i = 0; i < passwordLength; i++) {
+      password = changeCharAtIndexToNumber(password, i);
+    }
+    return password;
+  }
+
   return password;
 }
 
