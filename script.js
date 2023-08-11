@@ -68,7 +68,8 @@ function generatePasswordUsingCriteria() {
 // ensures the password that is returned meets all of the users criteria
 function validatedPassword(password) {
   // validate password length
-  if (password.length != passwordLength) return generatePasswordUsingCriteria();
+  if (password.length !== passwordLength)
+    return generatePasswordUsingCriteria();
 
   // validate lowercase
   if (useLowerCase) {
@@ -79,6 +80,15 @@ function validatedPassword(password) {
   if (useUpperCase) {
     if (!/[A-Z]/.test(password)) return generatePasswordUsingCriteria();
   }
+
+  if (useNumbers && !/[0-9]/.test(password))
+    return generatePasswordUsingCriteria();
+
+  if (
+    useSpecialCharacters &&
+    !/[!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/.test(password)
+  )
+    return generatePasswordUsingCriteria();
 
   return password;
 }
