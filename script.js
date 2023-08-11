@@ -20,6 +20,7 @@ function writePassword() {
   passwordText.value = password;
 }
 
+// generate a set of characters based on the user criteria
 function getCharacterSet() {
   const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
   const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -35,10 +36,12 @@ function getCharacterSet() {
   return charset;
 }
 
+// get a random character from the character set
 function getRandomCharFromSet(charset) {
   return charset[Math.floor(Math.random() * charset.length)];
 }
 
+//generate the password by getting the user's criteria and then generating a password based on the a character set built from that criteria
 function generatePassword() {
   //get the criteria from the user
   getCriteria();
@@ -57,6 +60,7 @@ function generatePassword() {
   return password;
 }
 
+// validate that the password meets the criteria. If not, generate it again until it does.
 function validatePassword(password) {
   if (password.length !== passwordLength) return generatePassword();
   if (useLowerCase && !/[a-z]/.test(password)) return generatePassword();
@@ -71,6 +75,7 @@ function validatePassword(password) {
   return password;
 }
 
+// get criteria from the user
 function getCriteria() {
   // TODO: Implement fetching of user criteria, possibly through prompts or forms.
 }
