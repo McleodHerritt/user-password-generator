@@ -2,8 +2,8 @@
 var minLength = 8;
 var maxLength = 128;
 var passwordLength = 8;
-var useLowerCase = true;
-var useUpperCase = true;
+var useLowerCase = false;
+var useUpperCase = false;
 var useNumbers = true;
 var useSpecialCharacters = true;
 var probabilityOfInsertion = 20;
@@ -48,10 +48,16 @@ function generatePasswordUsingCriteria() {
   password = handleLowerAndUpperCaseCriteria(password);
 
   //handle numeric
-  password = handleNumericCriteria(password);
+  // password = handleNumericCriteria(password);
+  password = handleCriteria(password, useNumbers, changeCharAtIndexToNumber);
 
   //handle special characters
-  password = handleSpecialCharCriteria(password);
+  // password = handleSpecialCharCriteria(password);
+  password = handleCriteria(
+    password,
+    useSpecialCharacters,
+    changeCharAtIndexToSpecialChar
+  );
 
   //validate the password to make sure it handles all of the criteria
   password = validatedPassword(password);
@@ -76,22 +82,20 @@ function validatedPassword(password) {
 
   return password;
 }
-// this function handles the user criteria for special characters
-function handleSpecialCharCriteria(password) {
-  if (!useSpecialCharacters) return password;
+
+function handleCriteria(password, useCriteria, changeCharFunction) {
+  if (!useCriteria) return password;
 
   for (var i = 0; i < passwordLength; i++) {
-    // randomly insert numbers
     var randomNumber = Math.random() * 100;
-
     if (randomNumber < probabilityOfInsertion) {
-      password = changeCharAtIndexToSpecialChar(password, i);
+      password = changeCharFunction(password, i);
     }
   }
 
-  //make sure we have at least one uppercase letter
+  // Ensure at least one character meets the criteria
   randomNumber = Math.floor(Math.random() * passwordLength);
-  password = changeCharAtIndexToSpecialChar(password, randomNumber);
+  password = changeCharFunction(password, randomNumber);
 
   return password;
 }
@@ -110,26 +114,6 @@ function changeCharAtIndexToSpecialChar(stringToModify, index) {
     stringToModify.substring(index + 1);
 
   return stringToModify;
-}
-
-// this function handles the criteria whether the user has chosen to include numbers or not
-function handleNumericCriteria(password) {
-  if (!useNumbers) return password;
-
-  for (var i = 0; i < passwordLength; i++) {
-    // randomly insert numbers
-    var randomNumber = Math.random() * 100;
-
-    if (randomNumber < probabilityOfInsertion) {
-      password = changeCharAtIndexToNumber(password, i);
-    }
-  }
-
-  //make sure we have at least one uppercase letter
-  randomNumber = Math.floor(Math.random() * passwordLength);
-  password = changeCharAtIndexToNumber(password, randomNumber);
-
-  return password;
 }
 
 function changeCharAtIndexToNumber(stringToModify, index) {
