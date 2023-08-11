@@ -1,14 +1,17 @@
 //variables to store user criteria
 var minLength = 8;
 var maxLength = 128;
-var passwordLength = minLength;
+var passwordLength = 5;
 var useLowerCase = true;
 var useUpperCase = true;
-var useNumbers = false;
+var useNumbers = true;
 var useSpecialCharacters = false;
 
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
+
+// Add event listener to generate button
+generateBtn.addEventListener("click", writePassword);
 
 // Write password to the #password input
 function writePassword() {
@@ -18,9 +21,8 @@ function writePassword() {
   passwordText.value = password;
 }
 
-// Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
-
+// this function is called from the writePassword function when the user clicks
+// the button to generate the button
 function generatePassword() {
   //get the criteria from the user
   getCriteria();
@@ -32,28 +34,67 @@ function generatePassword() {
   return password;
 }
 
+// this function gets user input to determine the password criteria
+// TODO
 function getCriteria() {}
 
+// this function generates the password given a set of user criteria
 function generatePasswordUsingCriteria() {
-  var password = "";
-
-  //generate a password of letters that is the password length
-  for (var i = 0; i < passwordLength; i++) {
-    // in ascii, a is 97 and z is 122
-    // so, we want to generate a random number between 97 and 122 to represent the lowercase character to be added to the password
-    var minChar = 97;
-    var maxChar = 122;
-
-    var nextChar = minChar + Math.round(Math.random() * (maxChar - minChar));
-
-    password += String.fromCharCode(nextChar);
-  }
+  // initialize the password of all lowercase letters of length passwordLength
+  var password = handlePasswordLengthCriteria(passwordLength);
 
   //handle user criteria for lower and uppercase, noting that we already have all lower case characters
+  password = handleLowerAndUpperCaseCriteria(password);
+
+  //handle numeric
+  password = handleNumericCriteria(password);
+
+  //handle special characters
+  password = handleSpecialCharCriteria(password);
+
+  return password;
+}
+
+function handleSpecialCharCriteria(password) {
+  return password;
+}
+// this function handles the criteria whether the user has chosen to include numbers or not
+function handleNumericCriteria(password) {
+  if (!useNumbers) return password;
+
+  for (var i = 0; i < passwordLength; i++) {
+    // randomly insert numbers
+    var randomNumber = Math.random() * 100;
+
+    if (randomNumber > 50) {
+      password = changeCharAtIndexToNumber(password, i);
+    }
+  }
+
+  //make sure we have at least one uppercase letter
+  randomNumber = Math.floor(Math.random() * passwordLength);
+  password = changeCharAtIndexToNumber(password, randomNumber);
+
+  return password;
+}
+
+function changeCharAtIndexToNumber(stringToModify, index) {
+  var randomNumber = Math.floor(Math.random() * 10);
+
+  stringToModify =
+    stringToModify.substring(0, index) +
+    randomNumber +
+    stringToModify.substring(index + 1);
+
+  return stringToModify;
+}
+
+// this function handles the case where the user has selected lowerCase and upperCase criteria
+// assumes the password given is all lowercase letters
+function handleLowerAndUpperCaseCriteria(password) {
   if (useLowerCase && useUpperCase) {
     for (var i = 0; i < passwordLength; i++) {
       //randomly change characters to uppercase
-
       var randomNumber = Math.random() * 100;
 
       if (randomNumber > 50) {
@@ -67,7 +108,24 @@ function generatePasswordUsingCriteria() {
   } else if (useUpperCase) {
     password = password.toUpperCase();
   }
+  return password;
+}
 
+// generates a password of lower case letters of length passwordLength
+function handlePasswordLengthCriteria(length) {
+  var password = "";
+  for (var i = 0; i < length; i++) {
+    // in ascii, a is 97 and z is 122
+    // so, we want to generate a random number between 97 and 122 to represent the lowercase character to be added to the password
+    var minChar = 97;
+    var maxChar = 122;
+
+    // get a value between 97 and 122 which represents the next character to add to the password
+    var nextChar = minChar + Math.round(Math.random() * (maxChar - minChar));
+
+    // adds the character to the password by converting the number to the corresponding char using the fromCharCode built in function
+    password += String.fromCharCode(nextChar);
+  }
   return password;
 }
 
