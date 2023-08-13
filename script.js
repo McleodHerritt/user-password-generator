@@ -1,11 +1,11 @@
 //variables to store user criteria
 var minLength = 8;
 var maxLength = 128;
-var passwordLength = 8;
-var useLowerCase = true;
-var useUpperCase = true;
-var useNumbers = true;
-var useSpecialCharacters = true;
+var passwordLength = 0;
+var useLowerCase = false;
+var useUpperCase = false;
+var useNumbers = false;
+var useSpecialCharacters = false;
 var probabilityOfInsertion = 20;
 
 // Assignment Code
@@ -56,13 +56,14 @@ function generatePassword() {
 
   // Validation ensures password matches user criteria
   password = validatePassword(password);
-
+  //resetting password length for the next time a password in generated.
+  passwordLength = 0;
   return password;
 }
 
 // validate that the password meets the criteria. If not, generate it again until it does.
 function validatePassword(password) {
-  if (password.length !== passwordLength) return generatePassword();
+  if (password.length != passwordLength) return generatePassword();
   if (useLowerCase && !/[a-z]/.test(password)) return generatePassword();
   if (useUpperCase && !/[A-Z]/.test(password)) return generatePassword();
   if (useNumbers && !/[0-9]/.test(password)) return generatePassword();
@@ -77,5 +78,34 @@ function validatePassword(password) {
 
 // get criteria from the user
 function getCriteria() {
-  // TODO: Implement fetching of user criteria, possibly through prompts or forms.
+  // while loop to get password length from user
+  while (
+    passwordLength < 8 ||
+    passwordLength > 128 ||
+    passwordLength % 1 !== 0
+  ) {
+    passwordLength = prompt(
+      "How many characters-long do you want your password to be?"
+    );
+    //this if statmetn will let the user know if they entered an answer that didnt meet the criteria
+    if (
+      passwordLength < 8 ||
+      passwordLength > 128 ||
+      passwordLength % 1 !== 0
+    ) {
+      alert(
+        "You have to choose a number between 8 and 128 . Please try again."
+      );
+    }
+  }
+  //get criteria for password from the user
+  useLowerCase = confirm("Click ok to use lower case letters.");
+  useUpperCase = confirm("Click ok to use upper case letters.");
+  useNumbers = confirm("Click ok to use numbers.");
+  useSpecialCharacters = confirm("Click ok to use special characters.");
+  // will alert user they must choose one of the criteria if they choose none
+  if (!useLowerCase && !useUpperCase && !useNumbers && !useSpecialCharacters) {
+    alert("Must use at least one of the criteria");
+    getCriteria();
+  }
 }
